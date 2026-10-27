@@ -49,15 +49,30 @@ window.addEventListener('scroll', function () {
 window.addEventListener('resize', updateProgress, { passive: true });
 updateProgress();
 
+var heroArt = document.querySelector('.hero-art');
+var spinButton = document.querySelector('.art-spin');
+var spinTimer;
+if (heroArt && spinButton) {
+  spinButton.addEventListener('click', function () {
+    window.clearTimeout(spinTimer);
+    heroArt.classList.remove('is-spinning');
+    window.requestAnimationFrame(function () {
+      heroArt.classList.add('is-spinning');
+      spinTimer = window.setTimeout(function () {
+        heroArt.classList.remove('is-spinning');
+      }, 1100);
+    });
+  });
+}
+
 if (!reducedMotion && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-  var heroArt = document.querySelector('.hero-art');
   if (heroArt) {
     heroArt.addEventListener('pointermove', function (event) {
       var bounds = heroArt.getBoundingClientRect();
       var offsetX = (event.clientX - bounds.left) / bounds.width - 0.5;
       var offsetY = (event.clientY - bounds.top) / bounds.height - 0.5;
-      heroArt.style.setProperty('--art-x', (offsetX * 10).toFixed(1) + 'px');
-      heroArt.style.setProperty('--art-y', (offsetY * 10).toFixed(1) + 'px');
+      heroArt.style.setProperty('--art-x', (offsetX * 16).toFixed(1) + 'px');
+      heroArt.style.setProperty('--art-y', (offsetY * 16).toFixed(1) + 'px');
     });
     heroArt.addEventListener('pointerleave', function () {
       heroArt.style.setProperty('--art-x', '0px');
